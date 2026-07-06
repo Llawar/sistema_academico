@@ -63,48 +63,33 @@ export default function RegistroEstudio() {
 
   return (
     <div className="page-container">
-      <h1>Registro de Estudio</h1>
-      
-      <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
-        {showForm ? 'Cancelar' : 'Registrar Sesión'}
-      </button>
+      <div className="page-header">
+        <h1>Registro de Estudio</h1>
+        <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancelar' : 'Registrar Sesión'}
+        </button>
+      </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="form-card">
+        <form onSubmit={handleSubmit} className="card form-card">
           <div className="form-group">
             <label>Materia</label>
-            <select
-              value={formData.materia_id}
-              onChange={(e) => setFormData({ ...formData, materia_id: e.target.value })}
-            >
+            <select value={formData.materia_id} onChange={(e) => setFormData({ ...formData, materia_id: e.target.value })}>
               <option value="">Selecciona materia</option>
               {materias.map(m => <option key={m.id} value={m.id}>{m.nombre}</option>)}
             </select>
           </div>
           <div className="form-group">
             <label>Hora Inicio</label>
-            <input
-              type="datetime-local"
-              value={formData.hora_inicio}
-              onChange={(e) => setFormData({ ...formData, hora_inicio: e.target.value })}
-              required
-            />
+            <input type="datetime-local" value={formData.hora_inicio} onChange={(e) => setFormData({ ...formData, hora_inicio: e.target.value })} required />
           </div>
           <div className="form-group">
             <label>Hora Fin</label>
-            <input
-              type="datetime-local"
-              value={formData.hora_fin}
-              onChange={(e) => setFormData({ ...formData, hora_fin: e.target.value })}
-              required
-            />
+            <input type="datetime-local" value={formData.hora_fin} onChange={(e) => setFormData({ ...formData, hora_fin: e.target.value })} required />
           </div>
           <div className="form-group">
             <label>Tipo de Actividad</label>
-            <select
-              value={formData.tipo_actividad}
-              onChange={(e) => setFormData({ ...formData, tipo_actividad: e.target.value })}
-            >
+            <select value={formData.tipo_actividad} onChange={(e) => setFormData({ ...formData, tipo_actividad: e.target.value })}>
               <option value="estudio">Estudio</option>
               <option value="practica">Práctica</option>
               <option value="repaso">Repaso</option>
@@ -112,27 +97,24 @@ export default function RegistroEstudio() {
           </div>
           <div className="form-group">
             <label>Descripción</label>
-            <textarea
-              value={formData.descripcion}
-              onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
-            />
+            <textarea value={formData.descripcion} onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })} />
           </div>
           <button type="submit" className="btn-primary">Guardar</button>
         </form>
       )}
 
-      <div className="registros-list">
+      <div className="data-grid">
         {registros.length > 0 ? (
           registros.map(reg => (
-            <div key={reg.id} className="registro-card">
+            <div key={reg.id} className="card list-card">
               <span className="materia">{reg.materia_id ? materias.find(m => m.id === reg.materia_id)?.nombre : 'Sin materia'}</span>
-              <span className="tipo">{reg.tipo_actividad}</span>
-              <span className="horario">{new Date(reg.hora_inicio).toLocaleString()} - {new Date(reg.hora_fin).toLocaleString()}</span>
+              <span className="badge badge-pill">{reg.tipo_actividad}</span>
+              <span className="horario text-muted">{new Date(reg.hora_inicio).toLocaleTimeString()} - {new Date(reg.hora_fin).toLocaleTimeString()}</span>
               <button className="btn-danger" onClick={() => handleDelete(reg.id)}>X</button>
             </div>
           ))
         ) : (
-          <p>No hay registros. ¡Registra tu primera sesión de estudio!</p>
+          <div className="card text-center text-muted">No hay registros. ¡Registra tu primera sesión de estudio!</div>
         )}
       </div>
     </div>

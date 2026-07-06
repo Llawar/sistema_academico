@@ -6,8 +6,6 @@ from datetime import datetime
 class UsuarioBase(BaseModel):
     email: EmailStr
     nombre: str
-    carrera: Optional[str] = None
-    semestre: int = 1
     objetivo_promedio: float = 7.0
 
 
@@ -25,8 +23,6 @@ class UsuarioResponse(UsuarioBase):
 
 class UsuarioUpdate(BaseModel):
     nombre: Optional[str] = None
-    carrera: Optional[str] = None
-    semestre: Optional[int] = None
     objetivo_promedio: Optional[float] = None
 
 

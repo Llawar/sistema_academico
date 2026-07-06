@@ -11,8 +11,6 @@ class Usuario(Base):
     email = Column(String(255), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
     nombre = Column(String(255), nullable=False)
-    carrera = Column(String(255), nullable=True)
-    semestre = Column(Integer, default=1)
     objetivo_promedio = Column(Float, default=7.0)
     created_at = Column(DateTime, default=datetime.utcnow)
     

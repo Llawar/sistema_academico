@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "sqlite:///./academico.db"
+    DATABASE_URL: str = "sqlite:///./app/academico.db"
     SECRET_KEY: str = "tu_secret_key_muy_segura_aqui_cambiala"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30

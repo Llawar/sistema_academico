@@ -6,7 +6,7 @@ export default function Habitos() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ tipo: 'descanso', duracion_minutos: 30, notas: '' });
   const [loading, setLoading] = useState(true);
-  const tipos = ['descanso', 'distraccion', 'ejercicio', 'sueno'];
+  const tipos = ['descanso', 'distraccion', 'ejercicio', 'sueño'];
 
   useEffect(() => {
     loadHabitos();
@@ -48,56 +48,45 @@ export default function Habitos() {
 
   return (
     <div className="page-container">
-      <h1>Mis Hábitos</h1>
-      
-      <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
-        {showForm ? 'Cancelar' : 'Registrar Hábito'}
-      </button>
+      <div className="page-header">
+        <h1>Mis Hábitos</h1>
+        <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancelar' : 'Registrar Hábito'}
+        </button>
+      </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="form-card">
+        <form onSubmit={handleSubmit} className="card form-card">
           <div className="form-group">
             <label>Tipo de Hábito</label>
-            <select
-              value={formData.tipo}
-              onChange={(e) => setFormData({ ...formData, tipo: e.target.value })}
-            >
+            <select value={formData.tipo} onChange={(e) => setFormData({ ...formData, tipo: e.target.value })}>
               {tipos.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
             </select>
           </div>
           <div className="form-group">
             <label>Duración (minutos)</label>
-            <input
-              type="number"
-              min="1"
-              value={formData.duracion_minutos}
-              onChange={(e) => setFormData({ ...formData, duracion_minutos: parseInt(e.target.value) })}
-              required
-            />
+            <input type="number" min="1" value={formData.duracion_minutos} onChange={(e) => setFormData({ ...formData, duracion_minutos: parseInt(e.target.value) })} required />
           </div>
           <div className="form-group">
             <label>Notas (opcional)</label>
-            <textarea
-              value={formData.notas}
-              onChange={(e) => setFormData({ ...formData, notas: e.target.value })}
-            />
+            <textarea value={formData.notas} onChange={(e) => setFormData({ ...formData, notas: e.target.value })} />
           </div>
           <button type="submit" className="btn-primary">Guardar</button>
         </form>
       )}
 
-      <div className="habitos-list">
+      <div className="data-grid">
         {habitos.length > 0 ? (
           habitos.map(habito => (
-            <div key={habito.id} className="habito-card">
-              <span className={`tipo-badge tipo-${habito.tipo}`}>{habito.tipo}</span>
+            <div key={habito.id} className="card list-card">
+              <span className={`badge tipo-${habito.tipo}`}>{habito.tipo}</span>
               <span className="duracion">{habito.duracion_minutos} min</span>
-              <span className="fecha">{new Date(habito.fecha).toLocaleDateString()}</span>
+              <span className="fecha text-muted">{new Date(habito.fecha).toLocaleDateString()}</span>
               <button className="btn-danger" onClick={() => handleDelete(habito.id)}>X</button>
             </div>
           ))
         ) : (
-          <p>No hay hábitos registrados. ¡Registra tus hábitos diarios!</p>
+          <div className="card text-center text-muted">No hay hábitos registrados. ¡Registra tus hábitos diarios!</div>
         )}
       </div>
     </div>

@@ -48,9 +48,18 @@ pip install -r requirements.txt
 
 # Ejecutar el servidor
 uvicorn app.main:app --reload
-```
+
 
 El backend estará disponible en: `http://localhost:8000`
+
+
+# Para desactivar el entorno virtual ejecuta
+deactivate
+
+# para ver que librerias de python tienes instalado en tu entorno virtual ejecuta este comando 
+pip list
+
+```
 
 ### 2. Frontend (React + Vite)
 

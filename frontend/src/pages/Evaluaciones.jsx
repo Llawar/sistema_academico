@@ -63,76 +63,59 @@ export default function Evaluaciones() {
 
   return (
     <div className="page-container">
-      <h1>Mis Evaluaciones</h1>
-      
-      <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
-        {showForm ? 'Cancelar' : 'Registrar Evaluación'}
-      </button>
+      {/* Usamos page-header para que título y botón estén alineados */}
+      <div className="page-header">
+        <h1>Mis Evaluaciones</h1>
+        <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancelar' : 'Registrar Evaluación'}
+        </button>
+      </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="form-card">
+        <form onSubmit={handleSubmit} className="card form-card">
           <div className="form-group">
             <label>Materia</label>
-            <select
-              value={formData.materia_id}
-              onChange={(e) => setFormData({ ...formData, materia_id: e.target.value })}
-              required
-            >
+            <select value={formData.materia_id} onChange={(e) => setFormData({ ...formData, materia_id: e.target.value })} required>
               <option value="">Selecciona materia</option>
               {materias.map(m => <option key={m.id} value={m.id}>{m.nombre}</option>)}
             </select>
           </div>
           <div className="form-group">
             <label>Tipo de Evaluación</label>
-            <select
-              value={formData.tipo}
-              onChange={(e) => setFormData({ ...formData, tipo: e.target.value })}
-            >
+            <select value={formData.tipo} onChange={(e) => setFormData({ ...formData, tipo: e.target.value })}>
               {tipos.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
             </select>
           </div>
           <div className="form-group">
             <label>Nota</label>
-            <input
-              type="number"
-              step="0.1"
-              min="1"
-              max="10"
-              value={formData.nota}
-              onChange={(e) => setFormData({ ...formData, nota: parseFloat(e.target.value) })}
-              required
-            />
+            <input type="number" step="0.1" min="1" max="10" value={formData.nota} onChange={(e) => setFormData({ ...formData, nota: parseFloat(e.target.value) })} required />
           </div>
           <div className="form-group">
             <label>Ponderación</label>
-            <input
-              type="number"
-              step="0.1"
-              min="0.1"
-              max="2"
-              value={formData.ponderacion}
-              onChange={(e) => setFormData({ ...formData, ponderacion: parseFloat(e.target.value) })}
-            />
+            <input type="number" step="0.1" min="0.1" max="2" value={formData.ponderacion} onChange={(e) => setFormData({ ...formData, ponderacion: parseFloat(e.target.value) })} />
           </div>
           <button type="submit" className="btn-primary">Guardar</button>
         </form>
       )}
 
-      <div className="evaluaciones-list">
+      {/* Usamos data-grid y list-card */}
+      <div className="data-grid">
         {evaluaciones.length > 0 ? (
           evaluaciones.map(ev => (
-            <div key={ev.id} className="evaluacion-card">
+            <div key={ev.id} className="card list-card">
               <span className="materia">{getMateriaNombre(ev.materia_id)}</span>
-              <span className={`tipo-badge tipo-${ev.tipo}`}>{ev.tipo}</span>
-              <span className="nota">Nota: <strong>{ev.nota}</strong></span>
-              <span className="fecha">{new Date(ev.fecha).toLocaleDateString()}</span>
+              {/* Aquí usamos el .badge global */}
+              <span className={`badge tipo-${ev.tipo}`}>{ev.tipo}</span>
+              <span className="nota">Nota: <strong className="text-gradient">{ev.nota}</strong></span>
+              <span className="fecha text-muted">{new Date(ev.fecha).toLocaleDateString()}</span>
               <button className="btn-danger" onClick={() => handleDelete(ev.id)}>X</button>
             </div>
           ))
         ) : (
-          <p>No hay evaluaciones. ¡Registra tus primeras notas!</p>
+          <div className="card text-center text-muted">No hay evaluaciones. ¡Registra tus primeras notas!</div>
         )}
       </div>
     </div>
   );
+
 }

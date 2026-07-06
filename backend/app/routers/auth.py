@@ -1,6 +1,12 @@
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
+import jwt
 import bcrypt
+
+print("\n" + "="*50)
+print("ARCHIVO BCRYPT CARGADO:", bcrypt.__file__)
+print("HERRAMIENTAS DENTRO DE BCRYPT:", dir(bcrypt))
+print("="*50 + "\n")
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -17,11 +23,18 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+    # Convertimos ambos textos a bytes con .encode('utf-8') para que bcrypt no se queje
+    password_bytes = plain_password.encode('utf-8')
+    hash_bytes = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(password_bytes, hash_bytes)
 
 
 def get_password_hash(password: str) -> str:
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    # Convertimos la contraseña a bytes, la encriptamos, y la devolvemos como texto (.decode)
+    password_bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed_bytes = bcrypt.hashpw(password_bytes, salt)
+    return hashed_bytes.decode('utf-8')
 
 
 def create_access_token(data: dict) -> str:
@@ -46,7 +59,7 @@ def get_current_user(
         if user_id is None:
             raise credentials_exception
         user_id = int(user_id)
-    except (JWTError, ValueError):
+    except (jwt.InvalidTokenError, ValueError):
         raise credentials_exception
     
     user = db.query(Usuario).filter(Usuario.id == user_id).first()
@@ -66,8 +79,6 @@ def register(usuario: UsuarioCreate, db: Session = Depends(get_db)):
         email=usuario.email,
         hashed_password=hashed_password,
         nombre=usuario.nombre,
-        carrera=usuario.carrera,
-        semestre=usuario.semestre,
         objetivo_promedio=usuario.objetivo_promedio
     )
     db.add(db_usuario)
@@ -102,10 +113,6 @@ def update_me(
 ):
     if usuario_update.nombre is not None:
         current_user.nombre = usuario_update.nombre
-    if usuario_update.carrera is not None:
-        current_user.carrera = usuario_update.carrera
-    if usuario_update.semestre is not None:
-        current_user.semestre = usuario_update.semestre
     if usuario_update.objetivo_promedio is not None:
         current_user.objetivo_promedio = usuario_update.objetivo_promedio
     

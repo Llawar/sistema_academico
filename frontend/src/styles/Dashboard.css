@@ -1,0 +1,110 @@
+/* ============================================
+   DASHBOARD - Estilos exclusivos del panel
+   ============================================ */
+
+/* ── CABECERA Y SECCIONES ── */
+.dashboard__title {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: var(--space-8);
+  color: var(--color-text-primary);
+}
+
+.dashboard-section {
+  margin-bottom: var(--space-10);
+}
+
+.section-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+.text-center {
+  text-align: center;
+}
+
+/* ── STATS GRID (Cuadrícula de números superior) ── */
+.stats-grid {
+  display: grid;
+  /* Auto-fit hace que las columnas se adapten solas al ancho de pantalla */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-10);
+}
+
+/* Solo modificamos el interior de la tarjeta, el borde/fondo ya viene de .card */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: var(--space-5) var(--space-6);
+}
+
+.stat-card h3 {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+/* ── RECOMENDACIONES GRID ── */
+.recomendaciones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-5);
+}
+
+.rec-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  position: relative;
+}
+
+.rec-card h4 {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.rec-card p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  flex: 1; /* Empuja el badge hacia abajo */
+}
+
+/* Bordes de color según la prioridad (alta, media, baja) */
+.rec-card--alta  { border-left: 4px solid var(--color-danger); }
+.rec-card--media { border-left: 4px solid var(--color-warning); }
+.rec-card--baja  { border-left: 4px solid var(--color-success); }
+
+/* Colores para las etiquetas (badges) de prioridad */
+.badge--alta  { background: rgba(239, 68, 68, 0.15); color: var(--color-danger); border-color: rgba(239, 68, 68, 0.3); }
+.badge--media { background: rgba(245, 158, 11, 0.15); color: var(--color-warning); border-color: rgba(245, 158, 11, 0.3); }
+.badge--baja  { background: rgba(16, 185, 129, 0.15); color: var(--color-success); border-color: rgba(16, 185, 129, 0.3); }
+
+/* ── ALERTAS GRID ── */
+.alerts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

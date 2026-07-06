@@ -59,8 +59,6 @@ def test_user(db_session):
         email="test@example.com",
         nombre="Test User",
         hashed_password=hashed,
-        carrera="Ingenieria",
-        semestre=1,
         objetivo_promedio=7.0
     )
     db_session.add(user)

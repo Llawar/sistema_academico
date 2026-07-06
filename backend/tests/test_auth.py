@@ -9,8 +9,6 @@ class TestAuth:
                 "email": "newuser@example.com",
                 "password": "password123",
                 "nombre": "New User",
-                "carrera": "Ingenieria",
-                "semestre": 1,
                 "objetivo_promedio": 7.0
             }
         )
@@ -27,8 +25,6 @@ class TestAuth:
                 "email": "test@example.com",
                 "password": "password123",
                 "nombre": "Duplicate",
-                "carrera": "Ingenieria",
-                "semestre": 1,
                 "objetivo_promedio": 7.0
             }
         )
@@ -76,9 +72,9 @@ class TestAuth:
         response = client.put(
             "/api/auth/me",
             headers=auth_headers,
-            json={"nombre": "Updated Name", "carrera": "Medicina"}
+            json={"nombre": "Updated Name"}
         )
         assert response.status_code == 200
         data = response.json()
         assert data["nombre"] == "Updated Name"
-        assert data["carrera"] == "Medicina"
+
