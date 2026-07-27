@@ -25,9 +25,18 @@ api.interceptors.response.use(
       localStorage.removeItem('usuario');
       window.location.href = '/login';
     }
-    return Promise.reject(error);
+    // Extraer el mensaje de error específico de FastAPI (campo "detail")
+    const errorMessage = error.response?.data?.detail || 'Error en la solicitud';
+    
+    // Rechazamos con un objeto que incluye el mensaje limpio para la UI
+    return Promise.reject({ 
+      status: error.response?.status, 
+      message: errorMessage 
+    });
   }
 );
+
+// ─── SERVICIOS ───
 
 export const authService = {
   register: (data) => api.post('/auth/register', data),
@@ -53,12 +62,14 @@ export const registrosService = {
 export const habitosService = {
   getAll: (params) => api.get('/habitos', { params }),
   create: (data) => api.post('/habitos', data),
+  update: (id, data) => api.put(`/habitos/${id}`, data),
   delete: (id) => api.delete(`/habitos/${id}`),
 };
 
 export const evaluacionesService = {
   getAll: (params) => api.get('/evaluaciones', { params }),
   create: (data) => api.post('/evaluaciones', data),
+  update: (id, data) => api.put(`/evaluaciones/${id}`, data),
   delete: (id) => api.delete(`/evaluaciones/${id}`),
 };
 
@@ -67,6 +78,7 @@ export const analisisService = {
   getPrediccionMateria: (id) => api.get(`/analisis/predicciones/${id}`),
   getRecomendaciones: () => api.get('/analisis/recomendaciones'),
   getEstadisticas: () => api.get('/analisis/estadisticas'),
+  chat: (data) => api.post('/analisis/chat', data),
 };
 
 export default api;

@@ -7,9 +7,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Materias from './pages/Materias';
-import Habitos from './pages/Habitos';
+import Actividad from './pages/Actividad';
 import Predicciones from './pages/Predicciones';
-import RegistroEstudio from './pages/RegistroEstudio';
+import MiDia from './pages/MiDia';
 import Evaluaciones from './pages/Evaluaciones';
 import './index.css';
 
@@ -32,9 +32,9 @@ function App() {
               <Materias />
             </ProtectedRoute>
           } />
-          <Route path="/habitos" element={
+          <Route path="/mi-dia" element={
             <ProtectedRoute>
-              <Habitos />
+              <MiDia />
             </ProtectedRoute>
           } />
           <Route path="/predicciones" element={
@@ -42,9 +42,9 @@ function App() {
               <Predicciones />
             </ProtectedRoute>
           } />
-          <Route path="/registro" element={
+          <Route path="/actividad" element={
             <ProtectedRoute>
-              <RegistroEstudio />
+              <Actividad />
             </ProtectedRoute>
           } />
           <Route path="/evaluaciones" element={

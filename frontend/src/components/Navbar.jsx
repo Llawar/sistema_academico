@@ -2,7 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   Brain, LayoutDashboard, BookOpen, ClipboardCheck,
-  Clock, Activity, TrendingUp, LogOut, User, Menu, X
+  PenLine, CalendarDays, Clock, Activity, TrendingUp, LogOut, User, Menu, X
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -10,8 +10,8 @@ const navLinks = [
   { path: '/dashboard',    label: 'Dashboard',     icon: LayoutDashboard },
   { path: '/materias',     label: 'Materias',      icon: BookOpen },
   { path: '/evaluaciones', label: 'Evaluaciones',  icon: ClipboardCheck },
-  { path: '/registro',     label: 'Registro',      icon: Clock },
-  { path: '/habitos',      label: 'Hábitos',       icon: Activity },
+  { path: '/mi-dia',       label: 'Mi Día',        icon: PenLine },
+  { path: '/actividad',    label: 'Actividad',     icon: CalendarDays },
   { path: '/predicciones', label: 'Predicciones',  icon: TrendingUp },
 ];
 

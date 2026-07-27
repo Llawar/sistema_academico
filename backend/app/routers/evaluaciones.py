@@ -64,3 +64,26 @@ def delete_evaluacion(
     db.delete(db_evaluacion)
     db.commit()
     return {"message": "Evaluación eliminada"}
+
+
+@router.put("/{evaluacion_id}", response_model=EvaluacionResponse)
+def update_evaluacion(
+    evaluacion_id: int,
+    evaluacion: EvaluacionCreate,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    db_evaluacion = db.query(Evaluacion).filter(
+        Evaluacion.id == evaluacion_id,
+        Evaluacion.usuario_id == current_user.id
+    ).first()
+    if not db_evaluacion:
+        raise HTTPException(status_code=404, detail="Evaluación no encontrada")
+
+    db_evaluacion.materia_id = evaluacion.materia_id
+    db_evaluacion.tipo = evaluacion.tipo
+    db_evaluacion.nota = evaluacion.nota
+    db_evaluacion.ponderacion = evaluacion.ponderacion
+    db.commit()
+    db.refresh(db_evaluacion)
+    return db_evaluacion

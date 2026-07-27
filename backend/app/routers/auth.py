@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 import jwt
 import bcrypt
 
@@ -10,7 +9,7 @@ print("="*50 + "\n")
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from ..core.database import get_db, settings
 from ..models.models import Usuario
@@ -22,6 +21,7 @@ router = APIRouter(prefix="/auth", tags=["Autenticación"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
+# Verifica contraseña con bcrypt
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     # Convertimos ambos textos a bytes con .encode('utf-8') para que bcrypt no se queje
     password_bytes = plain_password.encode('utf-8')
@@ -29,6 +29,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(password_bytes, hash_bytes)
 
 
+# Genera hash de contraseña con bcrypt
 def get_password_hash(password: str) -> str:
     # Convertimos la contraseña a bytes, la encriptamos, y la devolvemos como texto (.decode)
     password_bytes = password.encode('utf-8')
@@ -37,6 +38,7 @@ def get_password_hash(password: str) -> str:
     return hashed_bytes.decode('utf-8')
 
 
+# Crea token JWT de acceso
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -44,6 +46,7 @@ def create_access_token(data: dict) -> str:
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
+# Obtiene usuario autenticado desde el token
 def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
@@ -68,6 +71,7 @@ def get_current_user(
     return user
 
 
+# Registra un nuevo usuario
 @router.post("/register", response_model=UsuarioResponse)
 def register(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     db_user = db.query(Usuario).filter(Usuario.email == usuario.email).first()
@@ -87,6 +91,7 @@ def register(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     return db_usuario
 
 
+# Inicia sesión y devuelve token JWT
 @router.post("/login", response_model=TokenResponse)
 def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.email == login_data.email).first()
@@ -100,11 +105,13 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     return TokenResponse(access_token=access_token, usuario=user)
 
 
+# Obtiene perfil del usuario actual
 @router.get("/me", response_model=UsuarioResponse)
 def get_me(current_user: Usuario = Depends(get_current_user)):
     return current_user
 
 
+# Actualiza perfil del usuario actual
 @router.put("/me", response_model=UsuarioResponse)
 def update_me(
     usuario_update: UsuarioUpdate,

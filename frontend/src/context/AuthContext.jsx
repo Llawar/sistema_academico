@@ -25,8 +25,17 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const res = await authService.login({ email, password });
     localStorage.setItem('token', res.data.access_token);
-    localStorage.setItem('usuario', JSON.stringify(res.data.usuario));
-    setUser(res.data.usuario);
+    
+    // El backend actual SÍ devuelve usuario en login, pero por robustez 
+    // hacemos getMe() como fallback si no viniera
+    let userData = res.data.usuario;
+    if (!userData) {
+      const meRes = await authService.getMe();
+      userData = meRes.data;
+    }
+    
+    localStorage.setItem('usuario', JSON.stringify(userData));
+    setUser(userData);
     return res.data;
   };
 

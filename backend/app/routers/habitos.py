@@ -9,7 +9,7 @@ from ..routers.auth import get_current_user
 
 router = APIRouter(prefix="/habitos", tags=["Hábitos"])
 
-
+# GET /habitos - Lista todos los hábitos del usuario autenticado
 @router.get("", response_model=List[DatoHabitualResponse])
 def get_habitos(
     tipo: Optional[str] = None,
@@ -56,3 +56,25 @@ def delete_habito(
     db.delete(db_habito)
     db.commit()
     return {"message": "Hábito eliminado"}
+
+
+@router.put("/{habito_id}", response_model=DatoHabitualResponse)
+def update_habito(
+    habito_id: int,
+    habito: DatoHabitualCreate,
+    current_user: Usuario = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    db_habito = db.query(DatoHabitual).filter(
+        DatoHabitual.id == habito_id,
+        DatoHabitual.usuario_id == current_user.id
+    ).first()
+    if not db_habito:
+        raise HTTPException(status_code=404, detail="Hábito no encontrado")
+
+    db_habito.tipo = habito.tipo
+    db_habito.duracion_minutos = habito.duracion_minutos
+    db_habito.notas = habito.notas
+    db.commit()
+    db.refresh(db_habito)
+    return db_habito

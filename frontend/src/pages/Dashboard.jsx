@@ -7,25 +7,45 @@ import '../styles/Dashboard.css'; // Asegúrate de importar el nuevo CSS
 export default function Dashboard() {
   const { user } = useAuth();
   const [stats, setStats] = useState(null);
-  const [predicciones, setPredicciones] = useState(null);
+  const [predicciones, setPredicciones] = useState([]);
   const [recomendaciones, setRecomendaciones] = useState([]);
+  const [materias, setMaterias] = useState([]);
+  const [evaluaciones, setEvaluaciones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    loadData();
+    loadDashboard();
   }, []);
 
-  const loadData = async () => {
+  const loadDashboard = async () => {
+    setLoading(true);
+    setError('');
     try {
-      const [statsRes, predRes, recRes] = await Promise.all([
+      const [statsRes, predRes, recRes] = await Promise.allSettled([
         analisisService.getEstadisticas(),
         analisisService.getPredicciones(),
         analisisService.getRecomendaciones(),
       ]);
-      setStats(statsRes.data);
-      setPredicciones(predRes.data);
-      setRecomendaciones(recRes.data);
+
+      if (statsRes.status === 'fulfilled') setStats(statsRes.value.data);
+      else console.error('Error stats:', statsRes.reason);
+
+      if (predRes.status === 'fulfilled') setPredicciones(predRes.value.data);
+      else console.error('Error predicciones:', predRes.reason);
+
+      if (recRes.status === 'fulfilled') setRecomendaciones(recRes.value.data);
+      else console.error('Error recomendaciones:', recRes.reason);
+
+      // Cargar materias y evaluaciones para el gráfico
+      const [matRes, evalRes] = await Promise.all([
+        materiasService.getAll(),
+        evaluacionesService.getAll(),
+      ]);
+      setMaterias(matRes.data);
+      setEvaluaciones(evalRes.data);
     } catch (err) {
+      setError('Error al cargar el dashboard');
       console.error(err);
     } finally {
       setLoading(false);
@@ -44,6 +64,7 @@ export default function Dashboard() {
     /* 1. Añadimos 'page-container' para el centrado y max-width global */
     <div className="page-container dashboard">
       <h1 className="dashboard__title">Bienvenido, {user?.nombre}</h1>
+      {error && <p className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
       
       <div className="stats-grid">
         {/* 2. Añadimos 'card' a todas las stat-card */}
